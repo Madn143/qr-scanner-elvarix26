@@ -39,11 +39,12 @@ try {
 export { db };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Firestore Collection References
+// Isolated Firestore Collection Names (Dedicated to QR Scanner app)
+// Ensures existing collections in the database are not disturbed.
 // ─────────────────────────────────────────────────────────────────────────────
 export const COLLECTIONS = {
-  ATTENDEES: "Attendees",
-  RECEPTION_LOGS: "Reception_Logs",
-  SNACK_LOGS: "Snack_Logs",
-  FOOD_LOGS: "Food_Logs",
+  ATTENDEES: "ELVARIX26_Attendees",
+  RECEPTION_LOGS: "ELVARIX26_Reception_Logs",
+  SNACK_LOGS: "ELVARIX26_Snack_Logs",
+  FOOD_LOGS: "ELVARIX26_Food_Logs",
 };
