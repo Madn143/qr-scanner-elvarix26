@@ -29,14 +29,19 @@ jobs:
           distribution: 'temurin'
           java-version: 17
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install Node Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Generate Android Project (Expo Prebuild)
-        run: npx expo prebuild --platform android --clean
+      - name: Generate Android Native Project (Expo Prebuild)
+        run: CI=1 npx expo prebuild --platform android --clean
+
+      - name: Configure Android SDK Location
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+          cat android/local.properties
+
+      - name: Accept Android SDK Licenses
+        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: Make Gradle Executable
         run: chmod +x android/gradlew
@@ -49,7 +54,7 @@ jobs:
       - name: Upload APK as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ELVARIX26-Scanner-v1.0.0.apk
+          name: ELVARIX26-Scanner.apk
           path: android/app/build/outputs/apk/release/app-release.apk
 
       - name: Create GitHub Release & Upload APK
