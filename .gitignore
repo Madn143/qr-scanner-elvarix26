@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Expo / Metro
+.expo/
+dist/
+web-build/
+
+# Build logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Native builds
+android/
+ios/
+
+# OS files
+.DS_Store
+Thumbs.db

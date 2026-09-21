@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "ELVARIX'26",
+    "slug": "qr-scanner-elvarix26",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.qrscan",
+      "infoPlist": {
+        "NSCameraUsageDescription": "ELVARIX'26 needs camera access to scan participant QR codes at checkpoints.",
+        "NSPhotoLibraryUsageDescription": "ELVARIX'26 needs photo library access to save participant entry passes.",
+        "NSPhotoLibraryAddUsageDescription": "ELVARIX'26 needs permission to save entry pass images to your photo library."
+      }
+    },
+    "android": {
+      "package": "com.qrscan",
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "ELVARIX'26 needs camera access to scan participant QR codes at checkpoints."
+        }
+      ]
+    ],
+    "scheme": "qr-scanner-elvarix26"
+  }
+}

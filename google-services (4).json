@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "773443130796",
+    "project_id": "elvarix26",
+    "storage_bucket": "elvarix26.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773443130796:android:7167bc16334552c3455609",
+        "android_client_info": {
+          "package_name": "com.qrscan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLJmkWXSjmS2kbz-uJYzSqoDlu5FeNNBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
