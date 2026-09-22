@@ -1,6 +1,6 @@
 // components/EventCheckboxGroup.js
 // ─────────────────────────────────────────────────────────────────────────────
-// Multi-select checkbox group for event selection in the Pass Generator.
+// Multi-select checkbox group for official ELVARIX'26 events in Pass Generator.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import React from "react";
@@ -8,16 +8,14 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export const ALL_EVENTS = [
-  "Blind Coding",
-  "On Spot Video Editing",
-  "UI/UX Design Challenge",
-  "Hackathon",
   "Paper Presentation",
-  "Project Expo",
-  "Web Design Sprint",
-  "Bug Hunt",
-  "Poster Presentation",
-  "Gaming Tournament",
+  "Blind Coding",
+  "UI/UX Design",
+  "Tech Quiz",
+  "On-Spot Video Editing",
+  "Word Dump",
+  "Corporate Walk",
+  "E-Sports",
 ];
 
 export default function EventCheckboxGroup({ selected, onChange }) {
