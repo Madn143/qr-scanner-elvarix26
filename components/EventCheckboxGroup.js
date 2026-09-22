@@ -1,6 +1,6 @@
 // components/EventCheckboxGroup.js
 // ─────────────────────────────────────────────────────────────────────────────
-// Multi-select checkbox group for official ELVARIX'26 events in Pass Generator.
+// Multi-select checkbox group for all ELVARIX'26 events in Pass Generator.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import React from "react";
@@ -16,6 +16,12 @@ export const ALL_EVENTS = [
   "Word Dump",
   "Corporate Walk",
   "E-Sports",
+  "Hackathon",
+  "Project Expo",
+  "Web Design Sprint",
+  "Bug Hunt",
+  "Poster Presentation",
+  "Gaming Tournament",
 ];
 
 export default function EventCheckboxGroup({ selected, onChange }) {
