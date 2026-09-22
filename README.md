@@ -4,6 +4,35 @@ A production-ready React Native (Expo) app for managing event attendance at **EL
 
 ---
 
+## 🔒 FIXING "Missing or insufficient permissions" ERROR
+
+If you see **`Missing or insufficient permissions`** when scanning a QR code or saving a pass, your Firebase Firestore database security rules are currently blocking public reads/writes.
+
+### Step-by-Step Fix (Takes 30 seconds):
+
+1. Open **[Firebase Console](https://console.firebase.google.com/)**
+2. Select your project: **`elvarix26`**
+3. In the left menu, click **Build → Firestore Database**
+4. Click the **Rules** tab at the top
+5. Replace the existing rules with the following:
+
+```javascript
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+```
+
+6. Click the blue **Publish** button at the top right.
+7. Open the app on your phone and tap **RETRY** — scanning and pass generation will immediately work!
+
+---
+
 ## 📱 Features
 
 | Feature | Description |
@@ -22,8 +51,10 @@ A production-ready React Native (Expo) app for managing event attendance at **EL
 qr-scanner-elvarix26/
 ├── App.js                           # Root: Bottom tab navigator
 ├── app.json                         # Expo config + camera permissions
-├── firebaseConfig.js                # ⚠️  Firebase credentials (fill this in!)
+├── google-services.json             # Firebase Android config
+├── firebaseConfig.js                # Firebase SDK & collection names
 ├── babel.config.js
+├── metro.config.js
 ├── package.json
 ├── assets/
 │   ├── icon.png
@@ -40,62 +71,10 @@ qr-scanner-elvarix26/
 
 ---
 
-## 🔥 Firebase Setup (Required)
-
-### Step 1 — Create a Firebase Project
-
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Click **Add project** → name it `elvarix26`
-3. Disable Google Analytics (optional) → **Create project**
-
-### Step 2 — Enable Firestore
-
-1. In the left sidebar: **Build → Firestore Database**
-2. Click **Create database** → **Start in test mode** (for development)
-3. Choose a region close to you
-
-### Step 3 — Get Your Config
-
-1. **Project Settings** (gear icon) → **General** → scroll to **Your apps**
-2. Click `</>` to add a Web app → Register it
-3. Copy the `firebaseConfig` object
-
-### Step 4 — Update `firebaseConfig.js`
-
-Open `firebaseConfig.js` and replace the placeholder values:
-
-```js
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",              // ← replace
-  authDomain: "YOUR_AUTH_DOMAIN",      // ← replace
-  projectId: "YOUR_PROJECT_ID",        // ← replace
-  storageBucket: "YOUR_STORAGE_BUCKET",// ← replace
-  messagingSenderId: "YOUR_SENDER_ID", // ← replace
-  appId: "YOUR_APP_ID",               // ← replace
-};
-```
-
-### Step 5 — Firestore Security Rules (Production)
-
-For the event day, update Firestore rules to allow only authenticated or internal writes:
-
-```js
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true; // Replace with auth rules for production
-    }
-  }
-}
-```
-
----
-
 ## 🗄 Firestore Database Schema
 
 ```
-Attendees/
+ELVARIX26_Attendees/
   {registrationId}/
     ├── registrationId    (string)  e.g. "ELVA9423"
     ├── studentName       (string)  e.g. "Madan"
@@ -105,96 +84,22 @@ Attendees/
     ├── registrationType  (string)  "Internal" | "External"
     └── createdAt         (timestamp)
 
-Reception_Logs/
+ELVARIX26_Reception_Logs/
   {registrationId}/
     ├── registrationId    (string)
     └── timestamp         (timestamp)   ← One-time scan guard
 
-Snack_Logs/
+ELVARIX26_Snack_Logs/
   {registrationId}/
     ├── registrationId    (string)
     └── timestamp         (timestamp)   ← One-time scan guard
 
-Food_Logs/
+ELVARIX26_Food_Logs/
   {registrationId}/
     ├── registrationId    (string)
     ├── foodPreference    (string)
     └── timestamp         (timestamp)   ← One-time scan guard
 ```
-
-> **Key design**: Each log collection uses `registrationId` as the **document ID**. This guarantees uniqueness at the database level — no two scans for the same participant can ever succeed.
-
----
-
-## 🚀 Running the App
-
-### Prerequisites
-
-- Node.js 18+
-- Expo CLI: `npm install -g expo-cli`
-- Expo Go app on your Android/iOS device
-
-### Install & Start
-
-```bash
-cd qr-scanner-elvarix26
-npm install       # (already done if you're reading this)
-npx expo start
-```
-
-Then scan the QR code with **Expo Go** on your phone.
-
-### Android Physical Device (Recommended for Camera)
-
-```bash
-npx expo start --android
-```
-
-> ⚠️ Camera scanning **does not work on simulators/emulators**. Use a real device.
-
----
-
-## 📦 QR Code Payload Format
-
-Every generated pass encodes this JSON into the QR code:
-
-```json
-{
-  "registrationId": "ELVA9423",
-  "studentName": "Madan",
-  "collegeName": "Grace College of Engineering",
-  "events": ["Blind Coding", "On Spot Video Editing"],
-  "foodPreference": "Non-Veg",
-  "registrationType": "Internal"
-}
-```
-
----
-
-## 🎨 App Colour Palette
-
-| Role | Colour |
-|---|---|
-| Background | `#050A14` |
-| Card surface | `#0E1628` |
-| Primary accent | `#6366F1` (Indigo) |
-| Gold highlight | `#F59E0B` |
-| Success | `#22C55E` |
-| Error/Duplicate | `#EF4444` |
-
----
-
-## 🔧 Dependencies
-
-| Package | Purpose |
-|---|---|
-| `expo-camera` | Camera viewfinder + QR barcode scanning |
-| `react-native-qrcode-svg` | Renders QR codes in the digital pass |
-| `react-native-view-shot` | Captures the pass card as a PNG image |
-| `expo-sharing` | Native share sheet for WhatsApp / save to gallery |
-| `firebase` | Firestore real-time DB |
-| `@react-navigation/bottom-tabs` | Tab bar navigation |
-| `@expo/vector-icons` | Ionicons icon set |
 
 ---
 
