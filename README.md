@@ -4,32 +4,55 @@ A production-ready React Native (Expo) app for managing event attendance at **EL
 
 ---
 
-## 🔒 FIXING "Missing or insufficient permissions" ERROR
+## 🔒 MERGED FIRESTORE SECURITY RULES
 
-If you see **`Missing or insufficient permissions`** when scanning a QR code or saving a pass, your Firebase Firestore database security rules are currently blocking public reads/writes.
-
-### Step-by-Step Fix (Takes 30 seconds):
-
-1. Open **[Firebase Console](https://console.firebase.google.com/)**
-2. Select your project: **`elvarix26`**
-3. In the left menu, click **Build → Firestore Database**
-4. Click the **Rules** tab at the top
-5. Replace the existing rules with the following:
+Paste this exact block into your **Firebase Console → Firestore Database → Rules** tab. It preserves all existing website rules while enabling access for the QR Scanner app.
 
 ```javascript
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
+    
+    // ──────── EXISTING WEBSITE RULES (PRESERVED) ────────
+    match /registrations/{registrationId} {
+      allow create: if request.resource.data.registrationId == registrationId
+        && request.resource.data.fullName is string
+        && request.resource.data.email is string
+        && request.resource.data.transactionId is string
+        && request.resource.data.paymentScreenshot is string;
+
+      allow read: if true;
+      allow update, delete: if false;
+    }
+
+    match /counters/{counterId} {
+      allow read, write: if true;
+    }
+
+    match /feedback/{feedbackId} {
+      allow create: if request.resource.data.feedbackId == feedbackId
+        && request.resource.data.registrationId is string
+        && request.resource.data.feedback is string;
+      allow read, update, delete: if false;
+    }
+
+    // ──────── NEW RULES FOR QR SCANNER APP ────────
+    match /ELVARIX26_Attendees/{docId} {
+      allow read, write: if true;
+    }
+    match /ELVARIX26_Reception_Logs/{docId} {
+      allow read, write: if true;
+    }
+    match /ELVARIX26_Snack_Logs/{docId} {
+      allow read, write: if true;
+    }
+    match /ELVARIX26_Food_Logs/{docId} {
       allow read, write: if true;
     }
   }
 }
 ```
-
-6. Click the blue **Publish** button at the top right.
-7. Open the app on your phone and tap **RETRY** — scanning and pass generation will immediately work!
 
 ---
 
@@ -42,32 +65,6 @@ service cloud.firestore {
 | **Pass Generator** | On-spot registration form that generates a digital ELVARIX'26 entry pass |
 | **QR Code Embedding** | Every pass contains the full participant JSON encoded as a QR code |
 | **Share / Save** | Export the pass as a PNG image and share via WhatsApp or save to gallery |
-
----
-
-## 🗂 Project Structure
-
-```
-qr-scanner-elvarix26/
-├── App.js                           # Root: Bottom tab navigator
-├── app.json                         # Expo config + camera permissions
-├── google-services.json             # Firebase Android config
-├── firebaseConfig.js                # Firebase SDK & collection names
-├── babel.config.js
-├── metro.config.js
-├── package.json
-├── assets/
-│   ├── icon.png
-│   ├── splash.png
-│   └── adaptive-icon.png
-├── screens/
-│   ├── ScannerScreen.js             # Tab 1 — QR checkpoint scanner
-│   └── PassGeneratorScreen.js       # Tab 2 — On-spot pass generator
-└── components/
-    ├── StatusOverlay.js             # Green/red scan result overlay
-    ├── DigitalPass.js               # Official entry pass card component
-    └── EventCheckboxGroup.js        # Multi-select event checkboxes
-```
 
 ---
 
